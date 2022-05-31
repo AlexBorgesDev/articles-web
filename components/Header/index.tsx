@@ -1,8 +1,8 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 const Header = () => {
   return (
-    <section className="h-16 bg-surface">
+    <section className="h-16">
       <header className="w-full h-full max-w-7xl mx-auto px-6 flex items-center">
         <Link href="/">
           <a>
