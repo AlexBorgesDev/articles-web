@@ -2,6 +2,8 @@ import type { NextPage } from "next";
 
 import Head from "next/head";
 
+import Header from "../components/Header";
+
 const Home: NextPage = () => {
   return (
     <div>
@@ -13,7 +15,7 @@ const Home: NextPage = () => {
         />
       </Head>
 
-      <h1 className="text-3xl font-bold">Hello world!</h1>
+      <Header />
     </div>
   );
 };
