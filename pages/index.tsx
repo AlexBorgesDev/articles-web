@@ -1,8 +1,9 @@
-import type { NextPage } from "next";
+import type { NextPage } from 'next';
 
-import Head from "next/head";
+import Head from 'next/head';
 
-import Header from "../components/Header";
+import Header from '../components/Header';
+import Presentation from '../components/Presentation';
 
 const Home: NextPage = () => {
   return (
@@ -16,6 +17,9 @@ const Home: NextPage = () => {
       </Head>
 
       <Header />
+      <Presentation />
+
+      <main className="w-full max-w-7xl mx-auto"></main>
     </div>
   );
 };
