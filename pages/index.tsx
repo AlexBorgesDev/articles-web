@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 
 import Head from 'next/head';
 
@@ -6,7 +6,11 @@ import Header from '../components/Header';
 import Post from '../components/Post';
 import Presentation from '../components/Presentation';
 
-const Home: NextPage = () => {
+import api, { baseFilesURL } from '../services/api';
+
+type HomeProps = { posts: HomePost[] };
+
+const Home: NextPage<HomeProps> = ({ posts }) => {
   return (
     <div>
       <Head>
@@ -20,36 +24,38 @@ const Home: NextPage = () => {
       <Header />
       <Presentation />
 
+      {posts.length === 0 && (
+        <div className="w-full my-12 max-w-7xl mx-auto">
+          <h3 className="mx-auto text-center text-xl font-medium">
+            Ops! Ainda não foi publicado nenhuma artigo.
+          </h3>
+        </div>
+      )}
+
       <main className="w-full my-12 max-w-7xl mx-auto grid px-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <Post
-          slug="prisma"
-          title="Prisma: uma das melhores coisas que já aconteceu no ecossistema?"
-          banner={{
-            src: 'https://images.unsplash.com/photo-1554629947-334ff61d85dc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&h=1280&q=80',
-            description: 'Montanha',
-          }}
-        />
-
-        <Post
-          slug="prisma"
-          title="Prisma: uma das melhores coisas que já aconteceu no ecossistema?"
-          banner={{
-            src: 'https://images.unsplash.com/photo-1554629947-334ff61d85dc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&h=1280&q=80',
-            description: 'Montanha',
-          }}
-        />
-
-        <Post
-          slug="prisma"
-          title="Prisma: uma das melhores coisas que já aconteceu no ecossistema?"
-          banner={{
-            src: 'https://images.unsplash.com/photo-1554629947-334ff61d85dc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&h=1280&q=80',
-            description: 'Montanha',
-          }}
-        />
+        {posts.map(post => (
+          <Post
+            key={post.slug}
+            slug={post.slug}
+            title={post.title}
+            banner={{
+              src: `${baseFilesURL}${post.banner.filename}`,
+              description: post.banner.description,
+            }}
+          />
+        ))}
       </main>
     </div>
   );
+};
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  try {
+    const { data } = await api.get<ResponsePosts>('post');
+    return { props: { posts: data.data } };
+  } catch (e) {
+    return { props: { posts: [] } };
+  }
 };
 
 export default Home;
