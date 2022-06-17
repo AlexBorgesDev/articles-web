@@ -14,6 +14,7 @@ module.exports = {
         'surface-two': '#1A1B26',
       },
       fontSize: {
+        '3.2xl': ['2rem', { lineHeight: '1.3', letterSpacing: '0.5px' }],
         '4.5xl': ['2.5rem', { lineHeight: '3.438rem' }],
       },
     },
