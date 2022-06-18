@@ -1,6 +1,10 @@
 import type { GetStaticProps, NextPage } from 'next';
 
 import Head from 'next/head';
+import Link from 'next/link';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRightLong } from '@fortawesome/free-solid-svg-icons';
 
 import Header from '../components/Header';
 import Post from '../components/Post';
@@ -8,9 +12,9 @@ import Presentation from '../components/Presentation';
 
 import api, { baseFilesURL } from '../services/api';
 
-type HomeProps = { posts: HomePost[] };
+type HomeProps = { posts: HomePost[]; total: number; take: number };
 
-const Home: NextPage<HomeProps> = ({ posts }) => {
+const Home: NextPage<HomeProps> = ({ posts, take, total }) => {
   return (
     <div>
       <Head>
@@ -45,16 +49,30 @@ const Home: NextPage<HomeProps> = ({ posts }) => {
           />
         ))}
       </main>
+
+      <footer className="w-full px-6 pb-6">
+        <div className="w-full mx-auto flex justify-center text-base text-gray-400 font-semibold">
+          <span>Página 1</span>
+
+          {total >= take && (
+            <Link href="page/2">
+              <a className="ml-8" aria-label="Proximo">
+                <FontAwesomeIcon icon={faRightLong} className="ml-3" />
+              </a>
+            </Link>
+          )}
+        </div>
+      </footer>
     </div>
   );
 };
 
-export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async context => {
   try {
-    const { data } = await api.get<ResponsePosts>('post');
-    return { props: { posts: data.data } };
+    const { data } = await api.get<ResponsePosts>('post?take=15');
+    return { props: { posts: data.data, take: data.take, total: data.total } };
   } catch (e) {
-    return { props: { posts: [] } };
+    return { props: { posts: [], take: 15, total: 0 } };
   }
 };
 
